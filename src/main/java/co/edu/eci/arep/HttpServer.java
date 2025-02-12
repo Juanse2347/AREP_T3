@@ -12,7 +12,17 @@ public class HttpServer {
     private static final String STATIC_FILES_PATH = "src/main/resources/web/web";
 
     public static void main(String[] args) {
-        startServer();
+        try {
+            if (args.length > 0) {
+                Class<?> controllerClass = Class.forName(args[0]);
+                MicroServer.registerController(controllerClass);
+            } else {
+                System.out.println("No se proporcionó clase de controlador. Ejecutando sin controladores REST.");
+            }
+            startServer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -57,45 +67,49 @@ public class HttpServer {
             if (requestParts.length < 2) return;
 
             String method = requestParts[0];
-            String path = requestParts[1];
+            String fullPath = requestParts[1];
+            String path = fullPath.split("\\?")[0];
+            Map<String, String> queryParams = parseQueryParams(fullPath);
 
             if (method.equals("GET")) {
-                if (path.startsWith("/App/hello")) {
-                    Map<String, String> queryParams = parseQueryParams(path);
-                    String name = queryParams.getOrDefault("name", "World");
-                    String response = "Hello " + name;
-                    sendResponse(out, "200 OK", "text/plain", response.getBytes());
-                } else if (path.startsWith("/App/pi")) {
-                    String response = String.valueOf(Math.PI);
-                    sendResponse(out, "200 OK", "text/plain", response.getBytes());
+                // Si la ruta comienza con "/App/rests", se asume que es una llamada a un servicio REST
+                if (path.startsWith("/App/rests")) {
+                    // Se remueve el prefijo para obtener la ruta configurada en la anotación @GetMapping
+                    String route = path.replaceFirst("/App/rests", "");
+                    Object response = MicroServer.handle(route, queryParams);
+                    sendResponse(out, "200 OK", "application/json", response.toString().getBytes());
                 } else {
+                    // Se atiende la solicitud de archivo estático
                     serveStaticFile(out, path);
                 }
+            } else {
+                // Respuesta para método no permitido en JSON
+                String jsonError = "{\"message\": \"Método no permitido\"}";
+                sendResponse(out, "405 Method Not Allowed", "application/json", jsonError.getBytes());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private static void serveStaticFile(OutputStream out, String path) throws IOException {
         if (path.equals("/App/") || path.equals("/App/index.html")) {
-            // Cambiar la respuesta para devolver JSON en lugar de HTML
-            String jsonResponse = "{\"message\": \"Este es un JSON desde el servidor\", \"status\": \"OK\"}";
-            sendResponse(out, "200 OK", "application/json", jsonResponse.getBytes());
+            path = "/index.html";
         } else {
-            // Esta parte maneja otros archivos estáticos
-            path = path.replaceFirst("/App", ""); // Ajustar ruta de archivos estáticos
-            File file = new File(STATIC_FILES_PATH + path);
-            if (file.exists() && file.isFile()) {
-                byte[] fileBytes = Files.readAllBytes(file.toPath());
-                String contentType = Files.probeContentType(file.toPath());
-                if (contentType == null) {
-                    contentType = "text/plain";
-                }
-                sendResponse(out, "200 OK", contentType, fileBytes);
-            } else {
-                sendResponse(out, "404 Not Found", "text/plain", "404 Not Found".getBytes());
+            path = path.replaceFirst("/App", "");
+        }
+
+        File file = new File(STATIC_FILES_PATH + path);
+        if (file.exists() && file.isFile()) {
+            byte[] fileBytes = Files.readAllBytes(file.toPath());
+            String contentType = Files.probeContentType(file.toPath());
+            if (contentType == null) {
+                contentType = "text/plain";
             }
+            sendResponse(out, "200 OK", contentType, fileBytes);
+        } else {
+            String jsonNotFound = "{\"message\": \"404 Not Found\"}";
+            sendResponse(out, "404 Not Found", "application/json", jsonNotFound.getBytes());
         }
     }
 
