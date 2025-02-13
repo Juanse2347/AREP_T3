@@ -62,7 +62,6 @@ Puedes ejecutar pruebas con JUnit:
 ```bash
 mvn test
 ```
-
 ![Image](https://github.com/user-attachments/assets/c848bb42-f95b-4660-a23c-948d179853a4)
 
 
@@ -91,7 +90,7 @@ mvn checkstyle:check
 Vamos a comprobar los endpoints de nuestra API
 
 ```bash
-curl -X GET "http://localhost:30000/app/hello?name=Sebas"
+curl -X GET http://localhost:30000/App/rests/greeting?name=Sebas
 ```
 
 Esperamos lo siguiente:
@@ -116,7 +115,7 @@ Este proyecto incluye pruebas automatizadas para garantizar su correcto funciona
 
 ```bash
 cd src
-javac -cp .:/path/to/junit-4.12.jar co/edu/eci/arep/HttpServerTest.java
+javac -cp .:/path/to/junit-4.12.jar co/edu/eci/arep/MicroServerTest.java
 ```
 
 ## :office: Desplieqgue ##
@@ -124,7 +123,7 @@ javac -cp .:/path/to/junit-4.12.jar co/edu/eci/arep/HttpServerTest.java
 Vamos a ejecutar el servidor como un proceso en segundo plano o configurar un servicio systemd, de la siguiente manera:
 
 ```bash
-mvn exec:java -Dexec.mainClass="co.edu.eci.arep.RunApp"
+java -cp target/classes co.edu.eci.arep.HttpServer co.edu.eci.arep.GreetingController
 ```
 
 ## :cd: Construido con ## 
