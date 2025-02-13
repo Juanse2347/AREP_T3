@@ -45,9 +45,8 @@ public class HttpRequest {
         }
     }
 
-
+    // Retorna el valor del parámetro solicitado.
     public String getValues(String key) {
-
         return queryParams.getOrDefault(key, "");
     }
 }

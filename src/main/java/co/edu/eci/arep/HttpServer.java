@@ -5,7 +5,6 @@ import java.net.*;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public class HttpServer {
     private static final int PORT = 30000;
@@ -15,7 +14,7 @@ public class HttpServer {
         try {
             if (args.length > 0) {
                 Class<?> controllerClass = Class.forName(args[0]);
-                MicroServer.registerController(controllerClass);
+                MicroServer.registerController(GreetingController.class);
             } else {
                 System.out.println("No se proporcionó clase de controlador. Ejecutando sin controladores REST.");
             }
@@ -25,10 +24,9 @@ public class HttpServer {
         }
     }
 
-
     public static void startServer() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Servidor iniciado en el puerto:" + PORT);
+            System.out.println("Servidor iniciado en http://localhost:" + PORT);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 handleRequest(clientSocket);
@@ -38,23 +36,6 @@ public class HttpServer {
         }
     }
 
-    private static Map<String, String> parseQueryParams(String path) {
-        Map<String, String> params = new HashMap<>();
-        if (path.contains("?")) {
-            String[] parts = path.split("\\?");
-            if (parts.length > 1) {
-                for (String param : parts[1].split("&")) {
-                    String[] keyValue = param.split("=");
-                    if (keyValue.length == 2) {
-                        params.put(keyValue[0], keyValue[1]);
-                    }
-                }
-            }
-        }
-        return params;
-    }
-
-    // Maneja cada conexión de cliente.
     private static void handleRequest(Socket clientSocket) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              OutputStream out = clientSocket.getOutputStream()) {
@@ -72,24 +53,38 @@ public class HttpServer {
             Map<String, String> queryParams = parseQueryParams(fullPath);
 
             if (method.equals("GET")) {
-                // Si la ruta comienza con "/App/rests", se asume que es una llamada a un servicio REST
-                if (path.startsWith("/App/rests")) {
-                    // Se remueve el prefijo para obtener la ruta configurada en la anotación @GetMapping
-                    String route = path.replaceFirst("/App/rests", "");
+                if (path.startsWith("/App/rests/")) {
+                    // Extrae "greeting" de "/App/rests/greeting"
+                    String route = path.replaceFirst("/App/rests/", "");
                     Object response = MicroServer.handle(route, queryParams);
                     sendResponse(out, "200 OK", "application/json", response.toString().getBytes());
-                } else {
-                    // Se atiende la solicitud de archivo estático
+
+            } else {
                     serveStaticFile(out, path);
                 }
             } else {
-                // Respuesta para método no permitido en JSON
                 String jsonError = "{\"message\": \"Método no permitido\"}";
                 sendResponse(out, "405 Method Not Allowed", "application/json", jsonError.getBytes());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static Map<String, String> parseQueryParams(String url) {
+        Map<String, String> params = new HashMap<>();
+        if (url.contains("?")) {
+            String[] parts = url.split("\\?");
+            if (parts.length > 1) {
+                for (String param : parts[1].split("&")) {
+                    String[] keyValue = param.split("=");
+                    if (keyValue.length == 2) {
+                        params.put(keyValue[0], keyValue[1]);
+                    }
+                }
+            }
+        }
+        return params;
     }
 
     private static void serveStaticFile(OutputStream out, String path) throws IOException {
@@ -113,8 +108,6 @@ public class HttpServer {
         }
     }
 
-
-
     private static void sendResponse(OutputStream out, String status, String contentType, byte[] content) throws IOException {
         PrintWriter writer = new PrintWriter(out, true);
         writer.println("HTTP/1.1 " + status);
@@ -123,16 +116,5 @@ public class HttpServer {
         writer.println();
         out.write(content);
         out.flush();
-    }
-
-    private static class SocketOutputStreamWrapper extends OutputStream {
-        private final PrintWriter out;
-        public SocketOutputStreamWrapper(PrintWriter out) {
-            this.out = out;
-        }
-        @Override
-        public void write(int b) throws IOException {
-            out.write(b);
-        }
     }
 }
