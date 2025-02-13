@@ -1,13 +1,13 @@
 # Arquitecturas de Servidores de Aplicaciones, Meta protocolos de objetos, Patrón IoC, Reflexión
 
-En este tallertiene como objetivo mejorar un servidor web existente que actualmente admite archivos estáticos como HTML, JavaScript, CSS e imágenes. La mejora transformará el servidor en un microframework web completamente funcional, permitiendo el desarrollo de aplicaciones web con servicios REST de backend.
+Este taller los estudiantes deberán construir un servidor Web (tipo Apache) en Java. El servidor debe ser capaz de entregar páginas html e imágenes tipo PNG. Igualmente el servidor debe proveer un framework IoC para la construcción de aplicaciones web a partir de POJOS. Usando el servidor se debe construir una aplicación Web de ejemplo. El servidor debe atender múltiples solicitudes no concurrentes.
 
 
 ## 📌 Características
-- Implementación del método get() que permite definir servicios REST utilizando funciones lambda.
+Implementar un mecanismo de inyección de dependencias basado en anotaciones como 
 
 ```bash
-get("/hello", (req, res) -> "hello world!");
+*@RestController*, *@GetMapping* y *@RequestParam*.
 ```
 
 - Desarrollo de un mecanismo para extraer valores de consulta de las solicitudes entrantes.
@@ -30,8 +30,8 @@ staticfiles("webroot/public");
 ## 🚀 Instalación y Ejecución
 ### 1️⃣ Clonar el repositorio
 ```bash
-git clone https://github.com/Juanse2347/AREP_T2
-cd AREP_T2
+git clone https://github.com/Juanse2347/AREP_T3
+cd AREP_T3
 ```
 
 ### 2️⃣ Compilar el proyecto con Maven
