@@ -15,12 +15,7 @@ Implementar un mecanismo de inyección de dependencias basado en anotaciones com
 ```bash
 get("/hello", (req, res) -> "hello " + req.getValues("name"));
 ```
- 
-- Implementación del método staticfiles() para definir la carpeta donde se encuentran los archivos estáticos.
-  
-```bash
-staticfiles("webroot/public");
-```
+
 
 ## 🛠️ Requisitos
 - Java 11 o superior
