@@ -7,7 +7,7 @@ Este taller los estudiantes deberán construir un servidor Web (tipo Apache) en 
 Implementar un mecanismo de inyección de dependencias basado en anotaciones como 
 
 ```bash
-##@RestController##, ##@GetMapping## y ##@RequestParam##.
+@RestController, @GetMapping y @RequestParam.
 ```
 
 - Desarrollo de un mecanismo para extraer valores de consulta de las solicitudes entrantes.
