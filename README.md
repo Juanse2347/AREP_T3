@@ -15,12 +15,7 @@ Implementar un mecanismo de inyección de dependencias basado en anotaciones com
 ```bash
 get("/hello", (req, res) -> "hello " + req.getValues("name"));
 ```
- 
-- Implementación del método staticfiles() para definir la carpeta donde se encuentran los archivos estáticos.
-  
-```bash
-staticfiles("webroot/public");
-```
+
 
 ## 🛠️ Requisitos
 - Java 11 o superior
@@ -45,10 +40,10 @@ mvn clean install
 ### 3️⃣ Ejecutar el servidor
 
 ```bash
-mvn exec:java -Dexec.mainClass="co.edu.eci.arep.RunApp"
+java -cp target/classes co.edu.eci.arep.HttpServer co.edu.eci.arep.GreetingController
 ```
 
-![Image](https://github.com/user-attachments/assets/69edaaf2-b097-46dc-af5d-a1c79357ea26)
+![Image](https://github.com/user-attachments/assets/47f5a509-cbfd-4e83-902a-a29067b8f366)
 
 
 ### 4️⃣ Probar con un navegador o `curl`
@@ -56,16 +51,13 @@ mvn exec:java -Dexec.mainClass="co.edu.eci.arep.RunApp"
 curl http://localhost:30000/
 ```
 
-
-
 ## 🔍 Pruebas
 
 Puedes ejecutar pruebas con JUnit:
 ```bash
 mvn test
 ```
-
-![Image](https://github.com/user-attachments/assets/7ce93cf9-492c-4fda-985d-ce4f0053471f)
+![Image](https://github.com/user-attachments/assets/c848bb42-f95b-4660-a23c-948d179853a4)
 
 
 ## 🔍 Pruebas de extremo a extremo ##
@@ -93,12 +85,12 @@ mvn checkstyle:check
 Vamos a comprobar los endpoints de nuestra API
 
 ```bash
-curl -X GET "http://localhost:30000/app/hello?name=Juan"
+curl -X GET http://localhost:30000/App/rests/greeting?name=Sebas
 ```
 
 Esperamos lo siguiente:
 
-![image](https://github.com/user-attachments/assets/844ca709-f339-4f10-b446-84b7488be9e3)
+![Image](https://github.com/user-attachments/assets/b8ba46e0-740b-4d87-9d95-c7be7d270987)
 
 
 Prueba el endpoint que devuelve PI
@@ -118,7 +110,7 @@ Este proyecto incluye pruebas automatizadas para garantizar su correcto funciona
 
 ```bash
 cd src
-javac -cp .:/path/to/junit-4.12.jar co/edu/eci/arep/HttpServerTest.java
+javac -cp .:/path/to/junit-4.12.jar co/edu/eci/arep/MicroServerTest.java
 ```
 
 ## :office: Desplieqgue ##
@@ -126,7 +118,7 @@ javac -cp .:/path/to/junit-4.12.jar co/edu/eci/arep/HttpServerTest.java
 Vamos a ejecutar el servidor como un proceso en segundo plano o configurar un servicio systemd, de la siguiente manera:
 
 ```bash
-mvn exec:java -Dexec.mainClass="co.edu.eci.arep.RunApp"
+java -cp target/classes co.edu.eci.arep.HttpServer co.edu.eci.arep.GreetingController
 ```
 
 ## :cd: Construido con ## 
