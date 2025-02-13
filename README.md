@@ -45,18 +45,16 @@ mvn clean install
 ### 3️⃣ Ejecutar el servidor
 
 ```bash
-mvn exec:java -Dexec.mainClass="co.edu.eci.arep.RunApp"
+java -cp target/classes co.edu.eci.arep.HttpServer co.edu.eci.arep.GreetingController
 ```
 
-![Image](https://github.com/user-attachments/assets/69edaaf2-b097-46dc-af5d-a1c79357ea26)
+![Image](https://github.com/user-attachments/assets/47f5a509-cbfd-4e83-902a-a29067b8f366)
 
 
 ### 4️⃣ Probar con un navegador o `curl`
 ```bash
 curl http://localhost:30000/
 ```
-
-
 
 ## 🔍 Pruebas
 
@@ -93,12 +91,12 @@ mvn checkstyle:check
 Vamos a comprobar los endpoints de nuestra API
 
 ```bash
-curl -X GET "http://localhost:30000/app/hello?name=Juan"
+curl -X GET "http://localhost:30000/app/hello?name=Sebas"
 ```
 
 Esperamos lo siguiente:
 
-![image](https://github.com/user-attachments/assets/844ca709-f339-4f10-b446-84b7488be9e3)
+![Image](https://github.com/user-attachments/assets/b8ba46e0-740b-4d87-9d95-c7be7d270987)
 
 
 Prueba el endpoint que devuelve PI
