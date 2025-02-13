@@ -1,4 +1,4 @@
-# Microframework Web para Servicios REST y Gestión de Archivos Estáticos
+# Arquitecturas de Servidores de Aplicaciones, Meta protocolos de objetos, Patrón IoC, Reflexión
 
 En este tallertiene como objetivo mejorar un servidor web existente que actualmente admite archivos estáticos como HTML, JavaScript, CSS e imágenes. La mejora transformará el servidor en un microframework web completamente funcional, permitiendo el desarrollo de aplicaciones web con servicios REST de backend.
 
