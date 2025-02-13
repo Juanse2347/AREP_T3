@@ -1,3 +1,5 @@
+package co.edu.eci.arep;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -9,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class MicroServerTest {
-    
+
     @BeforeEach
     public void setUp() throws Exception {
         // Si tu MicroServer no tiene un método para limpiar las rutas,
